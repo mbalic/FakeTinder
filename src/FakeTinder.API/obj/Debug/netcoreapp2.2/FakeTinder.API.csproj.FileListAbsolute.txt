@@ -1,0 +1,14 @@
+C:\dev\_private\FakeTinder\FakeTinder.API\bin\Debug\netcoreapp2.2\FakeTinder.API.deps.json
+C:\dev\_private\FakeTinder\FakeTinder.API\bin\Debug\netcoreapp2.2\FakeTinder.API.runtimeconfig.json
+C:\dev\_private\FakeTinder\FakeTinder.API\bin\Debug\netcoreapp2.2\FakeTinder.API.runtimeconfig.dev.json
+C:\dev\_private\FakeTinder\FakeTinder.API\bin\Debug\netcoreapp2.2\FakeTinder.API.dll
+C:\dev\_private\FakeTinder\FakeTinder.API\bin\Debug\netcoreapp2.2\FakeTinder.API.pdb
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.csprojAssemblyReference.cache
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.csproj.CoreCompileInputs.cache
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.RazorAssemblyInfo.cache
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.RazorAssemblyInfo.cs
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.AssemblyInfoInputs.cache
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.AssemblyInfo.cs
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.RazorTargetAssemblyInfo.cache
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.dll
+C:\dev\_private\FakeTinder\FakeTinder.API\obj\Debug\netcoreapp2.2\FakeTinder.API.pdb
