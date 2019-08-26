@@ -12423,11 +12423,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
+      "projectUniqueName": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
       "projectName": "FakeTinder.API",
-      "projectPath": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
+      "projectPath": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
       "packagesPath": "C:\\Users\\Mario\\.nuget\\packages\\",
-      "outputPath": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\obj\\",
+      "outputPath": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",
