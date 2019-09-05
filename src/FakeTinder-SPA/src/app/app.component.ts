@@ -14,6 +14,7 @@ export class AppComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    // save token so we don't lose it on page refresh
     const token = localStorage.getItem('token');
     if (token) {
       this.authService.decodedToken = this.jwtHelper.decodeToken(token);

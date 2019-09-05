@@ -18,6 +18,7 @@ export class AuthService {
       map((response: any) => {
         const user = response;
         if (user) {
+          // save token to local storage
           localStorage.setItem('token', user.token);
           this.decodedToken = this.jwtHelper.decodeToken(user.token);
           console.log(this.decodedToken);
@@ -31,6 +32,7 @@ export class AuthService {
       map((response: any) => {
         const user = response;
         if (user) {
+          // save token to local storage
           localStorage.setItem('token', user.token);
         }
       })
@@ -38,8 +40,8 @@ export class AuthService {
   }
 
   loggedIn() {
+    // check if there is token in local storage and if it's expired
     const token = localStorage.getItem('token');
-
     return !this.jwtHelper.isTokenExpired(token);
   }
 }
