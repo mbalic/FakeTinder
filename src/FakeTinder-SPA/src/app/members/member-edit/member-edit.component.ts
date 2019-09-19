@@ -12,8 +12,11 @@ import { AuthService } from 'src/app/_services/auth.service';
   styleUrls: ['./member-edit.component.css']
 })
 export class MemberEditComponent implements OnInit {
+  // Accessing form component which is in template
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+
+  // Prevents closing browser window if form dirty
   @HostListener('window:beforeunload', ['$event'])
   unloadNotification($event: any) {
     if (this.editForm.dirty) {
