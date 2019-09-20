@@ -1,0 +1,9 @@
+<div class="row">
+  <div class="col-sm-2" *ngFor="let photo of photos">
+    <img src="{{photo.url}}" alt="" class="img-thumbnail p-1">
+    <div class="text-center">
+      <button class="btn btn-sm" type="button"></button>
+      <button class="btn btn-sm btn-danger" type="button"><i class="fa fa-trash-o"></i></button>
+    </div>
+  </div>
+</div>
