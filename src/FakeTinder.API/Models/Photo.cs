@@ -7,6 +7,7 @@ namespace FakeTinder.API.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public string Url { get; set; }
+        // From cloudinary
         public string PublicId { get; set; }
         public string Description { get; set; }
         public DateTime DateAdded { get; set; }

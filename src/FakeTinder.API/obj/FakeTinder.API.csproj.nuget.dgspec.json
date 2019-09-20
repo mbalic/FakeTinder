@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj": {}
+    "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj": {}
   },
   "projects": {
-    "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj": {
+    "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
+        "projectUniqueName": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
         "projectName": "FakeTinder.API",
-        "projectPath": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
+        "projectPath": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\FakeTinder.API.csproj",
         "packagesPath": "C:\\Users\\Mario\\.nuget\\packages\\",
-        "outputPath": "C:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\obj\\",
+        "outputPath": "c:\\dev\\_private\\FakeTinder\\src\\FakeTinder.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Microsoft\\Xamarin\\NuGet\\",
@@ -47,6 +47,10 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[4.0.1, )"
+            },
+            "CloudinaryDotNet": {
+              "target": "Package",
+              "version": "[1.8.0, )"
             },
             "Microsoft.AspNetCore.App": {
               "suppressParent": "All",

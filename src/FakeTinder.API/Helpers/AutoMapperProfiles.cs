@@ -27,7 +27,7 @@ namespace FakeTinder.API.Helpers
                 {
                     opt.ResolveUsing(d => d.DateOfBirth.CalculateAge());
                 });
-            CreateMap<Photo, PhotosForDetailedDto>();
+            CreateMap<Photo, PhotoForDetailedDto>();
             CreateMap<UserForUpdateDto, User>();
         }
     }
