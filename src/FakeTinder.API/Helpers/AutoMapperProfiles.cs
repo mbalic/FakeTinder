@@ -29,6 +29,8 @@ namespace FakeTinder.API.Helpers
                 });
             CreateMap<Photo, PhotoForDetailedDto>();
             CreateMap<UserForUpdateDto, User>();
+            CreateMap<PhotoForCreationDto, Photo>();
+            CreateMap<PhotoForReturnDto, Photo>();
         }
     }
 }

@@ -38,6 +38,15 @@ namespace FakeTinder.API.Controllers
             this._cloudinary = new Cloudinary(account);
         }
 
+        [HttpGet("{id}", Name = "GetPhoto")]
+        public async Task<IActionResult> GetPhoto(int id)
+        {
+            var photoFromRepo = await this._repo.GetPhoto(id);
+            var photo = this._mapper.Map<PhotoForReturnDto>(photoFromRepo);
+
+            return Ok(photo);
+        }
+
         [HttpPost]
         public async Task<IActionResult> AddPhotoForUser(int userId, PhotoForCreationDto photoForCreationDto)
         {
@@ -77,7 +86,9 @@ namespace FakeTinder.API.Controllers
 
             if (await this._repo.SaveAll())
             {
-                return Ok();
+                var photoToReturn = this._mapper.Map<PhotoForReturnDto>(photo);
+
+                return CreatedAtRoute("GetPhoto", new { id = photo.Id }, photoToReturn);
             }
 
             return BadRequest("Could not add photo.");
