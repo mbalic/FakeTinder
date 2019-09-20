@@ -96,7 +96,6 @@ namespace FakeTinder.API
 
             // Runs seeder on application start
             //seeder.SeedUsers();
-
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
