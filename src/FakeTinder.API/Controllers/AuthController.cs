@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
 using FakeTinder.API.Models;
@@ -18,9 +19,11 @@ namespace FakeTinder.API.Controllers
     {
         private readonly IAuthRepository _repo;
         public IConfiguration _config { get; }
+        private readonly IMapper _mapper;
 
-        public AuthController(IAuthRepository repo, IConfiguration config)
+        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
         {
+            this._mapper = mapper;
             this._config = config;
             this._repo = repo;
         }
@@ -72,10 +75,12 @@ namespace FakeTinder.API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
+            var user = this._mapper.Map<UserForListDto>(userFromRepo);
 
             return Ok(new
             {
-                token = tokenHandler.WriteToken(token)
+                token = tokenHandler.WriteToken(token),
+                user = user
             });
         }
     }

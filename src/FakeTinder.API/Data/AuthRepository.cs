@@ -31,7 +31,9 @@ namespace FakeTinder.API.Data
 
         public async Task<User> Login(string username, string password)
         {
-            var user = await this._context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            var user = await this._context.Users
+                .Include(x => x.Photos)
+                .FirstOrDefaultAsync(x => x.Username == username);
 
             if (user == null)
             {
