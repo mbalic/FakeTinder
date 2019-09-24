@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FakeTinder.API.Models;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,13 @@ namespace FakeTinder.API.Data
         public void Delete<T>(T entity) where T : class
         {
             this._context.Remove(entity);
+        }
+
+        public async Task<Photo> GetMainPhotoForUser(int userId)
+        {
+            return await this._context.Photos
+                .Where(p => p.UserId == userId)
+                .FirstOrDefaultAsync(p => p.IsMain);
         }
 
         public async Task<Photo> GetPhoto(int id)
