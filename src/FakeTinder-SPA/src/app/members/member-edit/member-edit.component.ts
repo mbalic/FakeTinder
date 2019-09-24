@@ -15,6 +15,7 @@ export class MemberEditComponent implements OnInit {
   // Accessing form component which is in template
   @ViewChild('editForm') editForm: NgForm;
   user: User;
+  photoUrl: string;
 
   // Prevents closing browser window if form dirty
   @HostListener('window:beforeunload', ['$event'])
@@ -35,6 +36,9 @@ export class MemberEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       this.user = data['user'];
     });
+    this.authService.currentPhotoUrl.subscribe(
+      photoUrl => (this.photoUrl = photoUrl)
+    );
   }
 
   updateUser() {
