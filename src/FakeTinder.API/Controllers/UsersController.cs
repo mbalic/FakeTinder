@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using AutoMapper;
 using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
+using FakeTinder.API.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FakeTinder.API.Controllers
 {
+    [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
