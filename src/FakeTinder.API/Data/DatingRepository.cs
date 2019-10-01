@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FakeTinder.API.Helpers;
 using FakeTinder.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,11 +44,10 @@ namespace FakeTinder.API.Data
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            return await this._context.Users
-                .Include(p => p.Photos)
-                .ToListAsync();
+            var users = this._context.Users.Include(p => p.Photos);
+            return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
         public async Task<bool> SaveAll()
