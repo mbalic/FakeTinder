@@ -28,6 +28,17 @@ namespace FakeTinder.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
+            var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var userFromRepo = await this._repo.GetUser(currentUserId);
+
+            userParams.UserId = currentUserId;
+
+            // IF no gender specified in params get oposite
+            if (string.IsNullOrEmpty(userParams.Gender))
+            {
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+            }
+
             var users = await this._repo.GetUsers(userParams);
             var usersToReturn = this._mapper.Map<IEnumerable<UserForListDto>>(users);
 

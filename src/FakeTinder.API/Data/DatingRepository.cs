@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -46,7 +47,18 @@ namespace FakeTinder.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users = this._context.Users.Include(p => p.Photos);
+            var users = this._context.Users.Include(p => p.Photos).AsQueryable()
+                .Where(p => p.Id != userParams.UserId)
+                .Where(p => p.Gender == userParams.Gender);
+
+            if (userParams.MinAge != 18 || userParams.MaxAge != 99)
+            {
+                var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
+                var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
+
+                users = users.Where(p => p.DateOfBirth >= minDateOfBirth && p.DateOfBirth <= maxDateOfBirth);
+            }
+
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
         }
 
