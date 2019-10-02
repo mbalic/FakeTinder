@@ -32,6 +32,7 @@ export class UserService {
       params = params.append('minAge', userParams.minAge);
       params = params.append('maxAge', userParams.maxAge);
       params = params.append('gender', userParams.gender);
+      params = params.append('orderBy', userParams.orderBy);
     }
 
     return this.http
@@ -54,7 +55,7 @@ export class UserService {
   }
 
   updateUser(id: Number, user: User) {
-    return this.http.put(this.baseUrl + 'id' + id, user);
+    return this.http.put(this.baseUrl + 'id/' + id, user);
   }
 
   setMainPhoto(userId: Number, id: Number) {
