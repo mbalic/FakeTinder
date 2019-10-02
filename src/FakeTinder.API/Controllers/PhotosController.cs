@@ -85,6 +85,8 @@ namespace FakeTinder.API.Controllers
                 photo.IsMain = true;
             }
 
+            userFromRepo.Photos.Add(photo);
+
             if (await this._repo.SaveAll())
             {
                 var photoToReturn = this._mapper.Map<PhotoForReturnDto>(photo);
@@ -129,7 +131,7 @@ namespace FakeTinder.API.Controllers
             return BadRequest("Could not set photo to main.");
         }
 
-        [HttpDelete("id")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePhoto(int userId, int id)
         {
             if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))

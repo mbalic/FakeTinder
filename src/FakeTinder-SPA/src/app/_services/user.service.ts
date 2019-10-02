@@ -55,19 +55,19 @@ export class UserService {
   }
 
   updateUser(id: Number, user: User) {
-    return this.http.put(this.baseUrl + 'id/' + id, user);
+    return this.http.put(this.baseUrl + id, user);
   }
 
   setMainPhoto(userId: Number, id: Number) {
     // We send empty object {} because it's post request
     // and we need to send something
     return this.http.post(
-      this.baseUrl + userId + '/photos' + id + '/setMain',
+      this.baseUrl + userId + '/photos/' + id + '/setMain',
       {}
     );
   }
 
   deletePhoto(userId: Number, id: Number) {
-    return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
+    return this.http.delete(this.baseUrl + userId + '/photos/' + id);
   }
 }
