@@ -7,7 +7,7 @@ namespace FakeTinder.API.Helpers
             this.CurrentPage = currentPage;
             this.ItemsPerPage = itemsPerPage;
             this.TotalItems = totalItems;
-            this.TotalPages = totalItems;
+            this.TotalPages = totalPages;
         }
         public int CurrentPage { get; set; }
         public int ItemsPerPage { get; set; }

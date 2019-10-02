@@ -10,19 +10,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  baseUrl = environment.apiUrl + 'users/';
+  baseUrl = environment.apiUrl;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  getUsers(
-    page?,
-    itemsPerPage?,
-    userParams?
-  ): Observable<PaginatedResult<User[]>> {
-    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<
-      User[]
-    >();
+  getUsers(page?, itemsPerPage?, userParams?): Observable<PaginatedResult<User[]>> {
+    const paginatedResult: PaginatedResult<User[]> = new PaginatedResult<User[]>();
+
     let params = new HttpParams();
+
     if (page != null && itemsPerPage != null) {
       params = params.append('pageNumber', page);
       params = params.append('pageSize', itemsPerPage);
@@ -36,7 +32,7 @@ export class UserService {
     }
 
     return this.http
-      .get<User[]>(this.baseUrl, { observe: 'response', params })
+      .get<User[]>(this.baseUrl + 'users', { observe: 'response', params })
       .pipe(
         map(response => {
           paginatedResult.result = response.body;
@@ -51,23 +47,23 @@ export class UserService {
   }
 
   getUser(id): Observable<User> {
-    return this.http.get<User>(this.baseUrl + id);
+    return this.http.get<User>(this.baseUrl + 'users/' + id);
   }
 
   updateUser(id: Number, user: User) {
-    return this.http.put(this.baseUrl + id, user);
+    return this.http.put(this.baseUrl + 'users/' + id, user);
   }
 
   setMainPhoto(userId: Number, id: Number) {
     // We send empty object {} because it's post request
     // and we need to send something
     return this.http.post(
-      this.baseUrl + userId + '/photos/' + id + '/setMain',
+      this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain',
       {}
     );
   }
 
   deletePhoto(userId: Number, id: Number) {
-    return this.http.delete(this.baseUrl + userId + '/photos/' + id);
+    return this.http.delete(this.baseUrl + 'users/' + userId + '/photos/' + id);
   }
 }
