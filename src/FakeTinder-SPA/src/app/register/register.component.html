@@ -56,10 +56,10 @@
       [ngClass]="{'is-invalid': registerForm.get('password').errors && registerForm.get('password').touched}"
       class="form-control" formControlName="password" placeholder="Password">
     <div class="invalid-feedback"
-      [*ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched}" ]>
+      *ngIf="registerForm.get('password').hasError('required') && registerForm.get('password').touched">
       Password is required</div>
     <div class="invalid-feedback"
-      [*ngIf="registerForm.get('password').hasError('minlength') && registerForm.get('password').touched}" ]>
+      *ngIf="registerForm.get('password').hasError('minlength') && registerForm.get('password').touched">
       Password must be at least 8 characters</div>
   </div>
 
@@ -68,12 +68,10 @@
         || registerForm.get('confirmPassword').touched && registerForm.get('confirmPassword').hasError('mismatch')}"
       class="form-control" formControlName="confirmPassword" placeholder="Confirm Password">
     <div class="invalid-feedback"
-      [*ngIf="registerForm.get('confirmPassword').hasError('required') && registerForm.get('confirmPassword').touched}"
-      ]>
+      *ngIf="registerForm.get('confirmPassword').hasError('required') && registerForm.get('confirmPassword').touched">
       Password is required</div>
     <div class="invalid-feedback"
-      [*ngIf="registerForm.get('confirmPassword').hasError('mismatch') && registerForm.get('confirmPassword').touched}"
-      ]>
+      *ngIf="registerForm.get('confirmPassword').hasError('mismatch') && registerForm.get('confirmPassword').touched">
       Passwords must match</div>
   </div>
 
