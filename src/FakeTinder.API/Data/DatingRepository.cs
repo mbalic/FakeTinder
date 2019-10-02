@@ -47,7 +47,9 @@ namespace FakeTinder.API.Data
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)
         {
-            var users = this._context.Users.Include(p => p.Photos).AsQueryable()
+            var users = this._context.Users.Include(p => p.Photos)
+                .OrderByDescending(p => p.LastActive)
+                .AsQueryable()
                 .Where(p => p.Id != userParams.UserId)
                 .Where(p => p.Gender == userParams.Gender);
 
@@ -57,6 +59,20 @@ namespace FakeTinder.API.Data
                 var maxDateOfBirth = DateTime.Today.AddYears(-userParams.MinAge);
 
                 users = users.Where(p => p.DateOfBirth >= minDateOfBirth && p.DateOfBirth <= maxDateOfBirth);
+            }
+
+            if (!string.IsNullOrEmpty(userParams.OrderBy))
+            {
+                switch (userParams.OrderBy)
+                {
+                    case "created":
+                        users = users.OrderByDescending(p => p.Created);
+                        break;
+                    default:
+                        users = users.OrderByDescending(p => p.LastActive);
+                        break;
+
+                }
             }
 
             return await PagedList<User>.CreateAsync(users, userParams.PageNumber, userParams.PageSize);
