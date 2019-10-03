@@ -50,8 +50,12 @@ namespace FakeTinder.API.Data
             var users = this._context.Users.Include(p => p.Photos)
                 .OrderByDescending(p => p.LastActive)
                 .AsQueryable()
-                .Where(p => p.Id != userParams.UserId)
-                .Where(p => p.Gender == userParams.Gender);
+                .Where(p => p.Id != userParams.UserId);
+
+            if (userParams.Gender != "all")
+            {
+                users = users.Where(p => p.Gender == userParams.Gender);
+            }
 
             if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             {

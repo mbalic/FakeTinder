@@ -14,6 +14,7 @@ export class MemberListComponent implements OnInit {
   users: User[];
   user: User = JSON.parse(localStorage.getItem('user'));
   genderList: [
+    { value: 'all', display: 'All' },
     { value: 'male', display: 'Males' },
     { value: 'female', display: 'Females' }
   ];
@@ -32,7 +33,7 @@ export class MemberListComponent implements OnInit {
       this.pagination = data['users'].pagination;
     });
 
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = 'all';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
     this.userParams.orderBy = 'lastActive';
@@ -44,9 +45,15 @@ export class MemberListComponent implements OnInit {
   }
 
   resetFilters() {
-    this.userParams.gender = this.user.gender === 'female' ? 'male' : 'female';
+    this.userParams.gender = 'all';
     this.userParams.minAge = 18;
     this.userParams.maxAge = 99;
+    this.pagination.currentPage = 1;
+    this.loadUsers();
+  }
+
+  applyFilter() {
+    this.pagination.currentPage = 1;
     this.loadUsers();
   }
 
@@ -60,7 +67,7 @@ export class MemberListComponent implements OnInit {
       .subscribe(
         (res: PaginatedResult<User[]>) => {
           this.users = res.result;
-          this.pagination = this.pagination;
+          this.pagination = res.pagination;
         },
         error => {
           this.alertify.error(error);
