@@ -20,5 +20,9 @@ namespace FakeTinder.API.Models
         public string City { get; set; }
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
+        // Users which like this user
+        public ICollection<Like> Likers { get; set; }
+        // Users liked by this user
+        public ICollection<Like> Likees { get; set; }
     }
 }
