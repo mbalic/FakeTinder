@@ -23,7 +23,7 @@ export class PhotoEditorComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private alertify: AlertifyService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.initializeUploader();
@@ -35,11 +35,7 @@ export class PhotoEditorComponent implements OnInit {
 
   initializeUploader() {
     this.uploader = new FileUploader({
-      url:
-        this.baseUrl +
-        'users/' +
-        this.authService.decodedToken.nameid +
-        '/photos',
+      url: this.baseUrl + 'users/' + this.authService.decodedToken.nameid + '/photos',
       authToken: 'Bearer ' + localStorage.getItem('token'),
       isHTML5: true,
       allowedFileType: ['image'],
@@ -69,9 +65,7 @@ export class PhotoEditorComponent implements OnInit {
         if (photo.isMain) {
           this.authService.changeMemberPhoto(photo.url);
           this.authService.currentUser.photoUrl = photo.url;
-          localStorage.setItem(
-            'user',
-            JSON.stringify(this.authService.currentUser)
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser)
           );
         }
       }
@@ -88,9 +82,7 @@ export class PhotoEditorComponent implements OnInit {
           photo.isMain = true;
           this.authService.changeMemberPhoto(photo.url);
           this.authService.currentUser.photoUrl = photo.url;
-          localStorage.setItem(
-            'user',
-            JSON.stringify(this.authService.currentUser)
+          localStorage.setItem('user', JSON.stringify(this.authService.currentUser)
           );
         },
         error => {

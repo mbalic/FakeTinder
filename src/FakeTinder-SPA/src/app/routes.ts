@@ -10,6 +10,7 @@ import { MemberListResolver } from './_resolvers/member-list.resolver';
 import { MemberEditComponent } from './members/member-edit/member-edit.component';
 import { MemberEditResolver } from './_resolvers/member-edit.resolver';
 import { PreventUnsavedChanges } from './_guards/prevent-unsaved-changes.guard';
+import { ListsResolver } from './_resolvers/lists.resolver';
 
 export const appRoutes: Routes = [
   {
@@ -43,8 +44,9 @@ export const appRoutes: Routes = [
       },
       {
         path: 'lists',
-        component: ListsComponent
-      }
+        component: ListsComponent,
+        resolve: { users: ListsResolver }
+      },
     ]
   },
   // this has to be in the end as wildcard
