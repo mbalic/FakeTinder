@@ -25,6 +25,12 @@ namespace FakeTinder.API.Data
             this._context.Remove(entity);
         }
 
+        public async Task<Like> GetLike(int userId, int recipientId)
+        {
+            return await this._context.Likes
+                .FirstOrDefaultAsync(u => u.LikerId == userId && u.LikeeId == recipientId);
+        }
+
         public async Task<Photo> GetMainPhotoForUser(int userId)
         {
             return await this._context.Photos
@@ -57,6 +63,18 @@ namespace FakeTinder.API.Data
                 users = users.Where(p => p.Gender == userParams.Gender);
             }
 
+            if (userParams.Likers)
+            {
+                var userLikers = await this.GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikers.Contains(u.Id));
+            }
+
+            if (userParams.Likees)
+            {
+                var userLikees = await this.GetUserLikes(userParams.UserId, userParams.Likers);
+                users = users.Where(u => userLikees.Contains(u.Id));
+            }
+
             if (userParams.MinAge != 18 || userParams.MaxAge != 99)
             {
                 var minDateOfBirth = DateTime.Today.AddYears(-userParams.MaxAge - 1);
@@ -86,6 +104,27 @@ namespace FakeTinder.API.Data
         {
             // returns changes saved to db
             return await this._context.SaveChangesAsync() > 0;
+        }
+
+        private async Task<IEnumerable<int>> GetUserLikes(int id, bool returnLikers)
+        {
+            var user = await this._context.Users
+                .Include(u => u.Likers)
+                .Include(u => u.Likees)
+                .FirstOrDefaultAsync(u => u.Id == id);
+
+            if (returnLikers)
+            {
+                return user.Likers
+                    .Where(u => u.LikeeId == id)
+                    .Select(u => u.LikerId);
+            }
+            else
+            {
+                return user.Likees
+                    .Where(u => u.LikerId == id)
+                    .Select(u => u.LikeeId);
+            }
         }
     }
 }

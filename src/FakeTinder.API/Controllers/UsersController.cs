@@ -6,6 +6,7 @@ using AutoMapper;
 using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
 using FakeTinder.API.Helpers;
+using FakeTinder.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,6 +74,42 @@ namespace FakeTinder.API.Controllers
             }
 
             throw new Exception($"Updating user {id} failed on save.");
+        }
+
+        [HttpPost("{id}/like/{recipientId}")]
+        public async Task<IActionResult> LikeUser(int id, int recipientId)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var like = await this._repo.GetLike(id, recipientId);
+
+            if (like != null)
+            {
+                return BadRequest("You already liked this user");
+            }
+
+            if (await this._repo.GetUser(recipientId) == null)
+            {
+                return NotFound();
+            }
+
+            like = new Like
+            {
+                LikerId = id,
+                LikeeId = recipientId
+            };
+
+            this._repo.Add<Like>(like);
+
+            if (await this._repo.SaveAll())
+            {
+                return Ok();
+            }
+
+            return BadRequest("Failed to like user");
         }
     }
 }
