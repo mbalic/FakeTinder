@@ -38,6 +38,21 @@ namespace FakeTinder.API.Data
                 .FirstOrDefaultAsync(p => p.IsMain);
         }
 
+        public async Task<Message> GetMessage(int id)
+        {
+            return await this._context.Messages.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        public Task<PagedList<Message>> GetMessagesForUser()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Photo> GetPhoto(int id)
         {
             return await this._context.Photos

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FakeTinder.API.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20191004115006_AddedMessagesEntity")]
-    partial class AddedMessagesEntity
+    [Migration("20191004134355_AddedMessageEntity")]
+    partial class AddedMessageEntity
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -38,11 +38,11 @@ namespace FakeTinder.API.Migrations
 
                     b.Property<string>("Content");
 
+                    b.Property<DateTime>("DateCreated");
+
                     b.Property<DateTime?>("DateRead");
 
                     b.Property<bool>("IsRead");
-
-                    b.Property<DateTime>("MessageSent");
 
                     b.Property<bool>("RecipientDeleted");
 

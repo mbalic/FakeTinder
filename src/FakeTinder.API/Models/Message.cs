@@ -12,7 +12,7 @@ namespace FakeTinder.API.Models
         public string Content { get; set; }
         public bool IsRead { get; set; }
         public DateTime? DateRead { get; set; }
-        public DateTime MessageSent { get; set; }
+        public DateTime DateCreated { get; set; }
         public bool SenderDeleted { get; set; }
         public bool RecipientDeleted { get; set; }
     }

@@ -36,11 +36,11 @@ namespace FakeTinder.API.Migrations
 
                     b.Property<string>("Content");
 
+                    b.Property<DateTime>("DateCreated");
+
                     b.Property<DateTime?>("DateRead");
 
                     b.Property<bool>("IsRead");
-
-                    b.Property<DateTime>("MessageSent");
 
                     b.Property<bool>("RecipientDeleted");
 

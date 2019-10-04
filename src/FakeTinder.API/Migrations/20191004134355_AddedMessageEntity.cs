@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace FakeTinder.API.Migrations
 {
-    public partial class AddedMessagesEntity : Migration
+    public partial class AddedMessageEntity : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,7 +18,7 @@ namespace FakeTinder.API.Migrations
                     Content = table.Column<string>(nullable: true),
                     IsRead = table.Column<bool>(nullable: false),
                     DateRead = table.Column<DateTime>(nullable: true),
-                    MessageSent = table.Column<DateTime>(nullable: false),
+                    DateCreated = table.Column<DateTime>(nullable: false),
                     SenderDeleted = table.Column<bool>(nullable: false),
                     RecipientDeleted = table.Column<bool>(nullable: false)
                 },

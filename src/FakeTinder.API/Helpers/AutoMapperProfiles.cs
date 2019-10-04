@@ -32,6 +32,7 @@ namespace FakeTinder.API.Helpers
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<PhotoForReturnDto, Photo>();
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<MessageForCreationDto, Message>().ReverseMap();
         }
     }
 }
