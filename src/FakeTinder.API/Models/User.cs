@@ -24,5 +24,7 @@ namespace FakeTinder.API.Models
         public ICollection<Like> Likers { get; set; }
         // Users liked by this user
         public ICollection<Like> Likees { get; set; }
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
     }
 }
