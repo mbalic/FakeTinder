@@ -43,14 +43,40 @@ namespace FakeTinder.API.Data
             return await this._context.Messages.FirstOrDefaultAsync(m => m.Id == id);
         }
 
-        public Task<PagedList<Message>> GetMessagesForUser()
+        public async Task<PagedList<Message>> GetMessagesForUser(MessageParams messageParams)
         {
-            throw new NotImplementedException();
+            var messages = this._context.Messages
+                .Include(m => m.Sender).ThenInclude(m => m.Photos)
+                .Include(m => m.Recipient).ThenInclude(m => m.Photos)
+                .AsQueryable();
+
+            switch (messageParams.MessageContainer)
+            {
+                case "Inbox":
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId);
+                    break;
+                case "Outbox":
+                    messages = messages.Where(m => m.SenderId == messageParams.UserId);
+                    break;
+                default:
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && !m.IsRead);
+                    break;
+            }
+
+            messages = messages.OrderByDescending(m => m.DateCreated);
+
+            return await PagedList<Message>.CreateAsync(messages, messageParams.PageNumber, messageParams.PageSize);
         }
 
-        public Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
+        public async Task<IEnumerable<Message>> GetMessagesThread(int userId, int recipientId)
         {
-            throw new NotImplementedException();
+            return await this._context.Messages
+                .Include(m => m.Sender).ThenInclude(m => m.Photos)
+                .Include(m => m.Recipient).ThenInclude(m => m.Photos)
+                .Where(m => m.RecipientId == userId && m.SenderId == recipientId
+                    || m.RecipientId == recipientId && m.SenderId == userId)
+                .OrderByDescending(m => m.DateCreated)
+                .ToListAsync();
         }
 
         public async Task<Photo> GetPhoto(int id)
