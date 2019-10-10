@@ -9,5 +9,5 @@ export class Message {
     content: string;
     isRead: boolean;
     dateRead: Date;
-    messageSent: Date;
+    dateCreated: Date;
 }
