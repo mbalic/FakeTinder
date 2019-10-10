@@ -53,13 +53,13 @@ namespace FakeTinder.API.Data
             switch (messageParams.MessageContainer)
             {
                 case "Inbox":
-                    messages = messages.Where(m => m.RecipientId == messageParams.UserId);
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && !m.RecipientDeleted);
                     break;
                 case "Outbox":
-                    messages = messages.Where(m => m.SenderId == messageParams.UserId);
+                    messages = messages.Where(m => m.SenderId == messageParams.UserId && !m.SenderDeleted);
                     break;
                 default:
-                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && !m.IsRead);
+                    messages = messages.Where(m => m.RecipientId == messageParams.UserId && !m.IsRead && !m.RecipientDeleted);
                     break;
             }
 
@@ -73,8 +73,8 @@ namespace FakeTinder.API.Data
             return await this._context.Messages
                 .Include(m => m.Sender).ThenInclude(m => m.Photos)
                 .Include(m => m.Recipient).ThenInclude(m => m.Photos)
-                .Where(m => m.RecipientId == userId && m.SenderId == recipientId
-                    || m.RecipientId == recipientId && m.SenderId == userId)
+                .Where(m => m.RecipientId == userId && m.SenderId == recipientId && !m.RecipientDeleted
+                    || m.RecipientId == recipientId && m.SenderId == userId && !m.SenderDeleted)
                 .OrderByDescending(m => m.DateCreated)
                 .ToListAsync();
         }
