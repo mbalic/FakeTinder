@@ -79,7 +79,9 @@ namespace FakeTinder.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
-            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            var sender = await this._repo.GetUser(userId);
+
+            if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
                 return Unauthorized();
             }
@@ -96,10 +98,10 @@ namespace FakeTinder.API.Controllers
             var message = this._mapper.Map<Message>(messageForCreationDto);
             this._repo.Add(message);
 
-            var messageToReturn = this._mapper.Map<MessageForCreationDto>(message);
-
             if (await this._repo.SaveAll())
             {
+                var messageToReturn = this._mapper.Map<MessageToReturnDto>(message);
+
                 return CreatedAtRoute("GetMessage", new { id = message.Id }, messageToReturn);
             }
 
