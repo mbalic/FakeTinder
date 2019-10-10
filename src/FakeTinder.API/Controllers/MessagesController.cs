@@ -140,5 +140,28 @@ namespace FakeTinder.API.Controllers
 
             throw new Exception("Error deleting the message.");
         }
+
+        [HttpPost("{id}/read")]
+        public async Task<IActionResult> MarkMessageAsRead(int userId, int id)
+        {
+            if (userId != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            {
+                return Unauthorized();
+            }
+
+            var message = await this._repo.GetMessage(id);
+
+            if (message.RecipientId != userId)
+            {
+                return Unauthorized();
+            }
+
+            message.IsRead = true;
+            message.DateRead = DateTime.Now;
+
+            await this._repo.SaveAll();
+
+            return NoContent();
+        }
     }
 }
