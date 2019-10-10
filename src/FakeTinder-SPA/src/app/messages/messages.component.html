@@ -41,7 +41,9 @@
         </td>
         <td>{{message.dateCreated | timeAgo}}</td>
         <td>
-          <button class="btn btn-danger">Delete</button>
+          <!-- stop propagation of event (redirection to member screen) that is defined in upper tr with routerLink -->
+          <button class="btn btn-danger" (click)="$event.stopPropagation()"
+            (click)="deleteMessage(message.id)">Delete</button>
         </td>
       </tr>
     </table>
