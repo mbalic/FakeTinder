@@ -15,7 +15,7 @@ namespace FakeTinder.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
     [Authorize]
-    [Route("api/users/{usersId}/[controller]")]
+    [Route("api/users/{userId}/[controller]")]
     [ApiController]
     public class MessagesController : ControllerBase
     {
@@ -54,10 +54,10 @@ namespace FakeTinder.API.Controllers
             }
 
             messageParams.UserId = userId;
-            var messageFromRepo = await this._repo.GetMessagesForUser(messageParams);
-            var messages = this._mapper.Map<IEnumerable<MessageToReturnDto>>(messageFromRepo);
+            var messagesFromRepo = await this._repo.GetMessagesForUser(messageParams);
+            var messages = this._mapper.Map<IEnumerable<MessageToReturnDto>>(messagesFromRepo);
 
-            Response.AddPagination(messageFromRepo.CurrentPage, messageFromRepo.PageSize, messageFromRepo.TotalCount, messageFromRepo.TotalPages);
+            Response.AddPagination(messagesFromRepo.CurrentPage, messagesFromRepo.PageSize, messagesFromRepo.TotalCount, messagesFromRepo.TotalPages);
 
             return Ok(messages);
         }
