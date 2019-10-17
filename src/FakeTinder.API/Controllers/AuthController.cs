@@ -7,12 +7,14 @@ using AutoMapper;
 using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
 using FakeTinder.API.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FakeTinder.API.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase

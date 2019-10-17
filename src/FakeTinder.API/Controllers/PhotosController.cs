@@ -14,7 +14,6 @@ using Microsoft.Extensions.Options;
 
 namespace FakeTinder.API.Controllers
 {
-    [Authorize]
     [Route("api/users/{userid}/photos")]
     [ApiController]
     public class PhotosController : ControllerBase
