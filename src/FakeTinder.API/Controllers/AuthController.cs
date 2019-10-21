@@ -8,7 +8,9 @@ using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
 using FakeTinder.API.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -19,48 +21,63 @@ namespace FakeTinder.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthRepository _repo;
         public IConfiguration _config { get; }
         private readonly IMapper _mapper;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AuthController(IAuthRepository repo, IConfiguration config, IMapper mapper)
+        public AuthController(IConfiguration config, IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             this._mapper = mapper;
             this._config = config;
-            this._repo = repo;
+            this._userManager = userManager;
+            this._signInManager = signInManager;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserForRegisterDto userForRegisterDto)
         {
-            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+            var userToCreate = this._mapper.Map<User>(userForRegisterDto);
+            var result = await this._userManager.CreateAsync(userToCreate, userForRegisterDto.Password);
+            var userToReturn = this._mapper.Map<UserForDetailsDto>(userToCreate);
 
-            if (await this._repo.UserExists(userForRegisterDto.Username))
+            if (result.Succeeded)
             {
-                return BadRequest("Username already exists");
+                return CreatedAtRoute("GetUser", new { controller = "Users", id = userToCreate.Id }, userToReturn);
             }
 
-            var userToCreate = this._mapper.Map<User>(userForRegisterDto);
-            var createdUser = await this._repo.Register(userToCreate, userForRegisterDto.Password);
-            var userToReturn = this._mapper.Map<UserForDetailsDto>(createdUser);
-
-            return CreatedAtRoute("GetUser", new { controller = "Users", id = createdUser.Id }, userToReturn);
+            return BadRequest(result.Errors);
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(UserForLoginDto userForLoginDto)
         {
-            var userFromRepo = await this._repo.Login(userForLoginDto.Username.ToLower(), userForLoginDto.Password);
+            var user = await this._userManager.FindByNameAsync(userForLoginDto.Username);
+            var result = await this._signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
-            if (userFromRepo == null)
+            if (result.Succeeded)
             {
-                return Unauthorized();
+                var appUser = await this._userManager.Users.Include(p => p.Photos)
+                    .FirstOrDefaultAsync(u => u.NormalizedUserName == userForLoginDto.Username.ToUpperInvariant());
+
+                var userToReturn = this._mapper.Map<UserForListDto>(appUser);
+
+                return Ok(new
+                {
+                    token = GenerateJwtToken(appUser),
+                    user = userToReturn
+                });
             }
 
+            return Unauthorized();
+        }
+
+        private string GenerateJwtToken(User user)
+        {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
-                new Claim(ClaimTypes.Name, userFromRepo.Username)
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.UserName)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this._config.GetSection("AppSettings:Token").Value));
@@ -74,13 +91,8 @@ namespace FakeTinder.API.Controllers
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            var user = this._mapper.Map<UserForListDto>(userFromRepo);
 
-            return Ok(new
-            {
-                token = tokenHandler.WriteToken(token),
-                user = user
-            });
+            return tokenHandler.WriteToken(token);
         }
     }
 }
