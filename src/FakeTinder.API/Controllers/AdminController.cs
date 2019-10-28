@@ -75,11 +75,11 @@ namespace FakeTinder.API.Controllers
             return Ok(await this._userManager.GetRolesAsync(user));
         }
 
-        [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("photosForModeration")]
-        public async Task<IActionResult> GetPhotosFormoderation()
-        {
-            return Ok("Admins or moderators can see this");
-        }
+        // [Authorize(Policy = "ModeratePhotoRole")]
+        // [HttpGet("photosForModeration")]
+        // public Task<IActionResult> GetPhotosFormoderation()
+        // {
+        //     return Ok("Admins or moderators can see this");
+        // }
     }
 }
