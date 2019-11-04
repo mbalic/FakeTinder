@@ -55,7 +55,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
             var file = photoForCreationDto.File;
             var uploadResult = new ImageUploadResult();
 
@@ -104,7 +104,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == id))
             {
@@ -138,7 +138,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == id))
             {

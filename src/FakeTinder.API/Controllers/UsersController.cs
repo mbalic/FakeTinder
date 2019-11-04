@@ -29,7 +29,7 @@ namespace FakeTinder.API.Controllers
         public async Task<IActionResult> GetUsers([FromQuery]UserParams userParams)
         {
             var currentUserId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var userFromRepo = await this._repo.GetUser(currentUserId);
+            var userFromRepo = await this._repo.GetUser(currentUserId, true);
 
             userParams.UserId = currentUserId;
 
@@ -50,7 +50,8 @@ namespace FakeTinder.API.Controllers
         [HttpGet("{id}", Name = "GetUser")]
         public async Task<IActionResult> GetUser(int id)
         {
-            var user = await this._repo.GetUser(id);
+            var isCurrentUser = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value) == id;
+            var user = await this._repo.GetUser(id, isCurrentUser);
             var userToReturn = this._mapper.Map<UserForDetailsDto>(user);
 
             return Ok(userToReturn);
@@ -64,7 +65,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(id);
+            var userFromRepo = await this._repo.GetUser(id, true);
             this._mapper.Map(userForUpdateDto, userFromRepo);
 
             if (await this._repo.SaveAll())
@@ -90,7 +91,7 @@ namespace FakeTinder.API.Controllers
                 return BadRequest("You already liked this user");
             }
 
-            if (await this._repo.GetUser(recipientId) == null)
+            if (await this._repo.GetUser(recipientId, false) == null)
             {
                 return NotFound();
             }
