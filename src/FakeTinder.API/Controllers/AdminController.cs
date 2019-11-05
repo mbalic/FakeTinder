@@ -93,7 +93,7 @@ namespace FakeTinder.API.Controllers
 
         [Authorize(Policy = "ModeratePhotoRole")]
         [HttpGet("photosForModeration")]
-        public async Task<IActionResult> GetPhotosFormoderation()
+        public async Task<IActionResult> GetPhotosForModeration()
         {
             var photos = await this._context.Photos
             .Include(u => u.User)
@@ -111,7 +111,7 @@ namespace FakeTinder.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("approvePhoto/{photoId}")]
+        [HttpPost("approvePhoto/{photoId}")]
         public async Task<IActionResult> ApprovePhoto(int photoId)
         {
             var photo = await this._context.Photos
@@ -126,7 +126,7 @@ namespace FakeTinder.API.Controllers
         }
 
         [Authorize(Policy = "ModeratePhotoRole")]
-        [HttpGet("rejectPhoto/{photoId}")]
+        [HttpPost("rejectPhoto/{photoId}")]
         public async Task<IActionResult> RejectPhoto(int photoId)
         {
             var photo = await this._context.Photos
