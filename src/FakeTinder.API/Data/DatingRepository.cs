@@ -85,11 +85,21 @@ namespace FakeTinder.API.Data
                 .FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public async Task<User> GetUser(int id)
+        public async Task<User> GetUser(int id, bool isCurrentUser)
         {
-            return await this._context.Users
-                .Include(p => p.Photos)
-                .FirstOrDefaultAsync(p => p.Id == id);
+            var query = this._context.Users
+                .Include(u => u.Photos)
+                .AsQueryable();
+
+            // Fo
+            if (isCurrentUser)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            var user = await query.FirstOrDefaultAsync(u => u.Id == id);
+
+            return user;
         }
 
         public async Task<PagedList<User>> GetUsers(UserParams userParams)

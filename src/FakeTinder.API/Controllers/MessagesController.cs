@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace FakeTinder.API.Controllers
 {
     [ServiceFilter(typeof(LogUserActivity))]
-    [Authorize]
     [Route("api/users/{userId}/[controller]")]
     [ApiController]
     public class MessagesController : ControllerBase
@@ -79,7 +78,7 @@ namespace FakeTinder.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateMessage(int userId, MessageForCreationDto messageForCreationDto)
         {
-            var sender = await this._repo.GetUser(userId);
+            var sender = await this._repo.GetUser(userId, true);
 
             if (sender.Id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
             {
@@ -88,7 +87,7 @@ namespace FakeTinder.API.Controllers
 
             messageForCreationDto.SenderId = userId;
 
-            var recipient = await this._repo.GetUser(messageForCreationDto.RecipientId);
+            var recipient = await this._repo.GetUser(messageForCreationDto.RecipientId, false);
 
             if (recipient == null)
             {
