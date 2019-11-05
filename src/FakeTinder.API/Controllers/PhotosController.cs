@@ -14,7 +14,6 @@ using Microsoft.Extensions.Options;
 
 namespace FakeTinder.API.Controllers
 {
-    [Authorize]
     [Route("api/users/{userid}/photos")]
     [ApiController]
     public class PhotosController : ControllerBase
@@ -56,7 +55,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
             var file = photoForCreationDto.File;
             var uploadResult = new ImageUploadResult();
 
@@ -105,7 +104,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == id))
             {
@@ -139,7 +138,7 @@ namespace FakeTinder.API.Controllers
                 return Unauthorized();
             }
 
-            var userFromRepo = await this._repo.GetUser(userId);
+            var userFromRepo = await this._repo.GetUser(userId, true);
 
             if (!userFromRepo.Photos.Any(p => p.Id == id))
             {

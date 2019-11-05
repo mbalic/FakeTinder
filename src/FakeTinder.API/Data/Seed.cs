@@ -1,43 +1,60 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using FakeTinder.API.Models;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 
 namespace FakeTinder.API.Data
 {
     public class Seed
     {
-        private readonly DataContext _context;
-        public Seed(DataContext context)
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<Role> _roleManager;
+        public Seed(UserManager<User> userManager, RoleManager<Role> roleManager)
         {
-            this._context = context;
+            this._userManager = userManager;
+            this._roleManager = roleManager;
         }
 
         public void SeedUsers()
         {
-            var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
-            var users = JsonConvert.DeserializeObject<List<User>>(userData);
-            foreach (var user in users)
+            if (!this._userManager.Users.Any())
             {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash("password", out passwordHash, out passwordSalt);
+                var userData = System.IO.File.ReadAllText("Data/UserSeedData.json");
+                var users = JsonConvert.DeserializeObject<List<User>>(userData);
+                var roles = new List<Role>
+                {
+                    new Role{Name = "Member"},
+                    new Role{Name = "Admin"},
+                    new Role{Name = "Moderator"},
+                    new Role{Name = "VIP"}
+                };
 
-                user.PasswordHash = passwordHash;
-                user.PasswordSalt = passwordSalt;
-                user.Username = user.Username.ToLower();
+                foreach (var role in roles)
+                {
+                    this._roleManager.CreateAsync(role).Wait();
+                }
 
-                this._context.Users.Add(user);
-            }
+                foreach (var user in users)
+                {
+                    user.Photos.SingleOrDefault().IsApproved = true;
+                    this._userManager.CreateAsync(user, "password").Wait();
+                    this._userManager.AddToRoleAsync(user, "Member").Wait();
+                }
 
-            this._context.SaveChanges();
-        }
+                var adminUser = new User
+                {
+                    UserName = "Admin"
+                };
 
-        private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
-        {
-            using (var hmac = new HMACSHA512())
-            {
-                passwordSalt = hmac.Key;
-                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+                var result = this._userManager.CreateAsync(adminUser, "password").Result;
+
+                if (result.Succeeded)
+                {
+                    var admin = this._userManager.FindByNameAsync("Admin").Result;
+                    this._userManager.AddToRolesAsync(admin, new[] { "Admin", "Moderator" }).Wait();
+                }
             }
         }
     }
