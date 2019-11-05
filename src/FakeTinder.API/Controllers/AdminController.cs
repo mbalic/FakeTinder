@@ -6,14 +6,18 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using FakeTinder.API.Data;
 using FakeTinder.API.Dtos;
+using FakeTinder.API.Helpers;
 using FakeTinder.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace FakeTinder.API.Controllers
@@ -24,10 +28,22 @@ namespace FakeTinder.API.Controllers
     {
         private readonly DataContext _context;
         private readonly UserManager<User> _userManager;
-        public AdminController(DataContext context, UserManager<User> userManager)
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private Cloudinary _cloudinary;
+
+        public AdminController(DataContext context, UserManager<User> userManager, IOptions<CloudinarySettings> cloudinaryConfig)
         {
+            this._cloudinaryConfig = cloudinaryConfig;
             this._context = context;
             this._userManager = userManager;
+
+            var account = new Account(
+               this._cloudinaryConfig.Value.CloudName,
+               this._cloudinaryConfig.Value.ApiKey,
+               this._cloudinaryConfig.Value.ApiSecret
+           );
+
+            this._cloudinary = new Cloudinary(account);
         }
 
         [Authorize(Policy = "RequireAdminRole")]
@@ -75,11 +91,73 @@ namespace FakeTinder.API.Controllers
             return Ok(await this._userManager.GetRolesAsync(user));
         }
 
-        // [Authorize(Policy = "ModeratePhotoRole")]
-        // [HttpGet("photosForModeration")]
-        // public Task<IActionResult> GetPhotosFormoderation()
-        // {
-        //     return Ok("Admins or moderators can see this");
-        // }
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpGet("photosForModeration")]
+        public async Task<IActionResult> GetPhotosFormoderation()
+        {
+            var photos = await this._context.Photos
+            .Include(u => u.User)
+            .IgnoreQueryFilters()
+            .Where(p => p.IsApproved == false)
+            .Select(u => new
+            {
+                Id = u.Id,
+                userName = u.User.UserName,
+                Url = u.Url,
+                IsApproved = u.IsApproved
+            }).ToListAsync();
+
+            return Ok(photos);
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpGet("approvePhoto/{photoId}")]
+        public async Task<IActionResult> ApprovePhoto(int photoId)
+        {
+            var photo = await this._context.Photos
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(p => p.Id == photoId);
+
+            photo.IsApproved = true;
+
+            await this._context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [Authorize(Policy = "ModeratePhotoRole")]
+        [HttpGet("rejectPhoto/{photoId}")]
+        public async Task<IActionResult> RejectPhoto(int photoId)
+        {
+            var photo = await this._context.Photos
+            .IgnoreQueryFilters()
+            .FirstOrDefaultAsync(p => p.Id == photoId);
+
+            if (photo.IsMain)
+            {
+                return BadRequest("You cannot reject the main photo");
+            }
+
+            if (photo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photo.PublicId);
+
+                var result = this._cloudinary.Destroy(deleteParams);
+
+                if (result.Result == "ok")
+                {
+                    this._context.Photos.Remove(photo);
+                }
+            }
+
+            if (photo.PublicId == null)
+            {
+                this._context.Photos.Remove(photo);
+            }
+
+            await this._context.SaveChangesAsync();
+
+            return Ok();
+        }
     }
 }
