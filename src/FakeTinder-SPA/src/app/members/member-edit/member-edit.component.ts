@@ -13,7 +13,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 })
 export class MemberEditComponent implements OnInit {
   // Accessing form component which is in template
-  @ViewChild('editForm') editForm: NgForm;
+  @ViewChild('editForm', { static: true }) editForm: NgForm;
   user: User;
   photoUrl: string;
 
@@ -30,7 +30,7 @@ export class MemberEditComponent implements OnInit {
     private alertify: AlertifyService,
     private userService: UserService,
     private authService: AuthService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.route.data.subscribe(data => {
