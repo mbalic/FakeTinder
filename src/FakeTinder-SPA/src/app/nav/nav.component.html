@@ -3,7 +3,7 @@
     <a class="navbar-brand" [routerLink]="['/home']">Fake Tinder</a>
     <ul *ngIf="loggedIn()" class="navbar-nav mr-auto">
       <li class="nav-item" routerLinkActive="active">
-        <a class="nav-link" [routerLink]="['/members']">Matches</a>
+        <a class="nav-link" id="matches-link" [routerLink]="['/members']">Matches</a>
       </li>
       <li class="nav-item" routerLinkActive="active">
         <a class="nav-link" [routerLink]="['/lists']">Lists</a>
@@ -20,14 +20,14 @@
       <span class="mr-1">
         <img src="{{photoUrl || '../../assets/user.png'}}" alt="">
       </span>
-      <a class="dropdown-toggle text-light" dropdownToggle>
+      <a class="dropdown-toggle text-light" id="dropdown-menu" dropdownToggle>
         Welcome {{authService.decodedToken?.unique_name | titlecase}}
       </a>
 
       <div class="dropdown-menu mt-3" *dropdownMenu>
         <a class="dropdown-item" [routerLink]="['/member/edit']"><i class="fa fa-user"></i>Edit profile</a>
         <div class="dropdown-divider"></div>
-        <a class="dropdown-item" (click)="logout()"><i class="fa fa-sign-out"></i>Logout</a>
+        <a class="dropdown-item" id="logout" (click)="logout()"><i class="fa fa-sign-out"></i>Logout</a>
       </div>
     </div>
 
